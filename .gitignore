@@ -1,0 +1,15 @@
+# Repositories cloned by scripts/bootstrap.mjs (each is its own git repo)
+/crossly.*/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+client_secret*.json
+.claude/settings.local.json
+
+# Tooling and OS noise
+node_modules/
+.DS_Store
+Thumbs.db

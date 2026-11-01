@@ -1,0 +1,80 @@
+{
+  "organization": "textyly",
+  "statuses": {
+    "in-progress": "Implemented and run from source; not yet packaged or published as a deployable artifact",
+    "planned": "Scaffold only; nothing implemented yet",
+    "reference": "Specification, papers or a superseded reference implementation"
+  },
+  "repos": [
+    {
+      "name": "crossly.ui",
+      "role": "Web editor: dot-based pattern design with a simultaneous front and back view",
+      "status": "in-progress",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.client.auth.service",
+      "role": "Guest sessions and Google sign-in; issues the stable clientId",
+      "status": "in-progress",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.client.preferences.service",
+      "role": "Per-client UI preferences",
+      "status": "in-progress",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.private.persistence.service",
+      "role": "Saves and loads each client's own patterns",
+      "status": "in-progress",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.data.model",
+      "role": "JSON pattern data model specification",
+      "status": "reference",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.academic.papers",
+      "role": "Research papers behind the project",
+      "status": "reference",
+      "branch": "main",
+      "bootstrap": true
+    },
+    {
+      "name": "crossly.persistence.service",
+      "role": "Original .NET patterns service, superseded by crossly.private.persistence.service",
+      "status": "reference",
+      "branch": "main",
+      "bootstrap": false
+    },
+    {
+      "name": "crossly.ai.chat.service",
+      "role": "AI guidance for embroidery",
+      "status": "planned",
+      "branch": "main",
+      "bootstrap": false
+    },
+    {
+      "name": "crossly.feedback.publishing.service",
+      "role": "Pattern publication workflow and moderation",
+      "status": "planned",
+      "branch": "main",
+      "bootstrap": false
+    },
+    {
+      "name": "crossly.system.settings.service",
+      "role": "Global configuration and feature flags",
+      "status": "planned",
+      "branch": "main",
+      "bootstrap": false
+    }
+  ]
+}
