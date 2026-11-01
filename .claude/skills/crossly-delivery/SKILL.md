@@ -10,7 +10,7 @@ Crossly is delivered as a **walking skeleton**: the thinnest slice through every
 ## Before you start
 
 1. Read `PLAN.md` to find the current slice (S0 to S4) and what is already ticked.
-2. List the open issues for that slice's milestone in `textyly/crossly`. If the milestones and issues do not exist yet, create them from [reference/slices.md](reference/slices.md), after asking the maintainer.
+2. Tickets are GitHub issues on the project board, created when work on a ticket starts. Look for an open issue for the ticket you are about to take; if there is none, create it from [reference/slices.md](reference/slices.md), after asking the maintainer.
 3. Read `AGENTS.md` for the project rules, which apply here too.
 4. Take one ticket at a time. Finish it, verify it, then report before starting the next.
 
@@ -40,6 +40,7 @@ Exact tickets, acceptance checks and the facts they rely on are in [reference/sl
 - **Never commit or push without review and an explicit "yes".** Show the maintainer what changed, wait for a clear "yes" for that commit or push, and leave the work uncommitted until then. This applies to every repository involved, including the cluster repository, and approval for one commit does not carry over to the next.
 - Ask the maintainer before changing anything in a live cluster or on GitHub settings.
 - Cluster-side wiring (namespaces, quotas, network policies, GitOps, ingress and DNS) is the operator's concern and lives in the operator's own repository, outside this project. Keep cluster-, domain- and hardware-specific values out of this repository.
+- This repository tracks product progress only. Where an instance is deployed, and what state it is in, are recorded by whoever operates it and may be unreachable. Ask the maintainer where those records are, and treat an unreachable instance as unverified, not as broken.
 - If a cluster you are asked to deploy to does not answer, say so and stop rather than treating it as a fault.
 - Verify against live state instead of trusting notes. Say what you checked and what you could not.
 - Keep this skill and the reference file lean: durable facts only. Progress belongs in `PLAN.md` and the issues.

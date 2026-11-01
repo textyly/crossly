@@ -24,7 +24,7 @@ Choices that follow from this:
 - **Manifests** live in this repository under `deploy/k8s`, so the product carries no knowledge of any particular cluster. A cluster operator keeps only the wiring that points at them.
 - **Deployment is pull-based** (see [0003](0003-pull-based-deployment.md)). The cluster runs Flux with image automation, so the only thing that can change a deployment from the CI side is the publication of a new image tag. No cluster-affecting credential is stored in GitHub.
 - **Flux is introduced in three stages:** apply the manifests by hand, then let Flux apply them, then add image automation.
-- **Tickets** are GitHub issues in this repository, grouped in one milestone per slice. `PLAN.md` links to the milestones.
+- **Tickets** are GitHub issues on the project board, created when work on them starts and not all up front. `PLAN.md` tracks progress by slice.
 
 ## Consequences
 
