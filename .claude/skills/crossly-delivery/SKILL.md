@@ -30,10 +30,10 @@ Exact tickets, acceptance checks and the facts they rely on are in [reference/sl
 
 - **Trigger:** pull requests run tests only. A merge to `main` runs tests, then builds and pushes images.
 - **Images:** amd64 and arm64, pushed to `ghcr.io/textyly/crossly-<service>` with the tag `main-<short-sha>-<unix-timestamp>`. Packages must be public so a cluster pulls them without credentials.
-- **Manifests:** each repository keeps its own under `deploy/k8s`, and CI publishes them with the images as an OCI artifact ([decision 0006](../../../docs/decisions/0006-publish-manifests-as-oci-artifact.md)). Nothing in them may name a particular cluster, domain or secret value.
+- **Manifests:** each repository keeps its own under `deploy/k8s`, and CI publishes them with the images as an OCI artifact ([decision 0006](../../../docs/decisions/0006-publish-manifests-as-oci-artifact.md)). Nothing in them may name a particular cluster, domain or secret value. Render with `kubectl kustomize deploy/k8s` and apply with `kubectl apply -k deploy/k8s`. The namespace is not created there, so the operator can attach quotas and network policies to it. The image tag in `kustomization.yaml` is only a known-good default for a local trial; the published artifact pins the tag CI just built. The Ingress sets no class, so the cluster default applies, and its host defaults to `crossly.localhost` for a local trial; operators override the host with a patch.
 - **Deploying:** the cluster pulls. Introduce Flux in stages (manual apply, then Flux following the published manifest artifact) and confirm each stage works before the next.
 - **Secrets:** never in git, images or workflow files. They are created in the cluster by the operator. Document the names and keys a deployment needs, never the values.
-- **Dockerfiles:** multi-stage, run as a non-root user, install with `npm ci`, and add a `.dockerignore`. Services build their contracts before compiling and start with `node dist/app.js`. The editor is built with its existing scripts and served as static files from `dist/`.
+- **Dockerfiles:** multi-stage, run as a non-root user, install with `npm ci`, and add a `.dockerignore`. Services build their contracts before compiling and start with `node dist/app.js`. The editor is built with its existing scripts and served as static files from `dist/`, on the slim unprivileged nginx image, which leaves out the optional modules and the libraries they pull in and so has far fewer packages to attack.
 
 ## Working rules
 

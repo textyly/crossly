@@ -59,7 +59,7 @@ Single `CROSSLY_PUBLIC_URL` setting (replaces the UI, CORS and callback URLs); D
 - Presize the thread arrays instead of growing them by four times each time, which over-allocates.
 - Once S0 is working, merge `main` into the stale `develop` branch of `crossly.ui`.
 - Licences and real descriptions for the three scaffold repositories, which are empty on GitHub.
-- Funding project number in `CITATION.cff`.
+- Citation metadata before the first release: the funding project number, `version` and `date-released`, and `preferred-citation` for the papers once their publication details are final.
 
 ## Facts to verify before relying on them (true on 2026-11-01)
 

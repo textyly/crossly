@@ -1,12 +1,4 @@
 #!/usr/bin/env node
-// Clones the Crossly repositories listed in repos.json into this folder.
-//
-//   node scripts/bootstrap.mjs               clone every repo marked "bootstrap": true
-//   node scripts/bootstrap.mjs --all         clone every listed repo, including planned ones
-//   node scripts/bootstrap.mjs --dry-run     only print what would be cloned
-//   node scripts/bootstrap.mjs --only a,b    clone just the named repos
-//
-// Requires Node 18+ and git. Existing folders are never modified.
 
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -14,7 +6,18 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const usage = `Usage: node scripts/bootstrap.mjs [--all] [--dry-run] [--only name,name]
+  (no flags)    clone every repository marked bootstrap in repos.json
+  --all         clone every listed repository, including planned ones
+  --dry-run     print what would be cloned
+  --only a,b    clone just the named repositories
+Existing folders are never modified. Needs Node 18+ and git.`;
+
 const args = process.argv.slice(2);
+if (args.includes("--help")) {
+    console.log(usage);
+    process.exit(0);
+}
 const dryRun = args.includes("--dry-run");
 const all = args.includes("--all");
 const onlyIdx = args.indexOf("--only");
@@ -24,6 +27,7 @@ const unknown = args.filter((a, i) =>
     !["--dry-run", "--all", "--only"].includes(a) && !(onlyIdx >= 0 && i === onlyIdx + 1));
 if (unknown.length > 0) {
     console.error(`Unknown argument(s): ${unknown.join(" ")}`);
+    console.error(usage);
     process.exit(2);
 }
 if (onlyIdx >= 0 && !only?.length) {
