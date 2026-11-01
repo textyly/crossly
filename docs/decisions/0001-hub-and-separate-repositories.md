@@ -8,7 +8,7 @@ Crossly is several independently versioned pieces: an editor, backend services, 
 
 ## Decision
 
-Keep one repository per component, and add this repository (`crossly`) as the front door. It holds the overview, the plan, decision records, the repository manifest (`repos.json`), a bootstrap script that clones the family, and instructions for AI assistants. It is also the place that publications and citations point to.
+Keep one repository per component, and add this repository (`crossly`) as the front door. It holds the overview, the plan, decision records, the repository manifest (`repos.json`), a bootstrap script that clones the family, and instructions for AI assistants.
 
 ## Consequences
 
