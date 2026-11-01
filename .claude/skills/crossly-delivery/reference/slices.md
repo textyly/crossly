@@ -11,7 +11,7 @@ Proves the whole pipeline with the smallest thing.
 | S0-1 | crossly | Create the milestones S0 to S4 and the labels, file these tickets as issues, link the milestones from `PLAN.md` | Issues exist and `PLAN.md` links them |
 | S0-2 | crossly.ui | Dockerfile: build the editor, serve `dist/` with nginx as non-root; leave `debug/live-reload.js` out of the image | `docker run` serves `index.html` and makes no live-reload request |
 | S0-3 | crossly.ui | Workflow: pull requests run tests; a merge to `main` runs tests, then builds and pushes the multi-arch image `main-<short-sha>-<unix-timestamp>` | Both architectures appear in GHCR and the package is public |
-| S0-4 | crossly | `deploy/k8s` base for the editor: Deployment with requests, limits and probes; Service; Ingress whose host is a substitution variable | `kubectl kustomize deploy/k8s` renders, and a server-side dry run passes |
+| S0-4 | crossly | `deploy/k8s` base for the editor: Deployment with requests, limits, probes and a hardened security context; Service; Ingress with a valid default host (`crossly.localhost`) that the operator overrides with a patch, because a placeholder variable is not a valid hostname and would fail validation | `kubectl kustomize deploy/k8s` renders, and a server-side dry run passes |
 | S0-5 | cluster repo | Namespace `crossly` with a ResourceQuota, a LimitRange and a default-deny NetworkPolicy that admits the ingress controller | Namespace exists and a test pod is reachable through the ingress controller |
 | S0-6 | cluster repo | Stage 1: apply the manifests by hand. Stage 2: install Flux, point a GitRepository at this repository and a Kustomization at `deploy/k8s`, with the host substituted | A manifest change merged to `main` reaches the cluster without a manual apply |
 | S0-7 | cluster repo | Stage 3: Flux image automation (ImageRepository, ImagePolicy over the sortable tag, ImageUpdateAutomation). Use a write-scoped deploy key for the cluster repo only | Pushing a new image changes the running pod with no manual step |
@@ -74,6 +74,6 @@ Single `CROSSLY_PUBLIC_URL` setting (replaces the UI, CORS and callback URLs); D
 
 - Does the official MongoDB image run on the Pi 5?
 - How long does an emulated amd64 build take? If too long, use native runners.
-- Do GHCR packages need a one-time "make public" step each?
+- Answered in S0-3: yes. The organisation must first allow public packages (organisation settings, Packages, Package creation, tick Public). Then each new package starts private and is made public once, in its own package settings (Danger Zone, Change visibility). Afterwards an anonymous pull works; check it with an empty Docker config.
 - Exact Flux image-automation setup for tags held in a Flux Kustomization.
 - How each service reads its port, and the default ports (5001, 5002, 5003).
