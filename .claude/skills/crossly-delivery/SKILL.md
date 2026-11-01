@@ -39,7 +39,7 @@ Exact tickets, acceptance checks and the facts they rely on are in [reference/sl
 
 - **Never commit or push without review and an explicit "yes".** Show the maintainer what changed, wait for a clear "yes" for that commit or push, and leave the work uncommitted until then. This applies to every repository involved, including the cluster repository, and approval for one commit does not carry over to the next.
 - Ask the maintainer before changing anything in a live cluster or on GitHub settings.
-- Cluster-side wiring lives in the maintainer's separate cluster repository (`bozov-lab`), which has its own `CLAUDE.md`. Read it before touching anything there, and follow its rule to show documentation changes before pushing them.
-- The test cluster is powered off between sessions and cannot be powered on remotely. If it does not answer, say so and stop rather than treating it as a fault.
+- Cluster-side wiring (namespaces, quotas, network policies, GitOps, ingress and DNS) is the operator's concern and lives in the operator's own repository, outside this project. Keep cluster-, domain- and hardware-specific values out of this repository.
+- If a cluster you are asked to deploy to does not answer, say so and stop rather than treating it as a fault.
 - Verify against live state instead of trusting notes. Say what you checked and what you could not.
 - Keep this skill and the reference file lean: durable facts only. Progress belongs in `PLAN.md` and the issues.

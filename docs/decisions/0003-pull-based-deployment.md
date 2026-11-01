@@ -4,7 +4,7 @@
 
 ## Context
 
-The maintainer's test instance runs on a home Kubernetes cluster that sits behind a home network and is powered off between sessions. GitHub's hosted runners cannot reach it, and opening a path in from the internet would put cluster credentials in the CI system.
+The test instance runs on a cluster that is not reachable from the internet and is not always on. GitHub's hosted runners cannot reach it, and opening a path in from the internet would put cluster credentials in the CI system.
 
 ## Decision
 
