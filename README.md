@@ -45,7 +45,7 @@ In short: make every service container-ready, publish images, package Crossly so
 
 ## Working with AI assistants
 
-This repository is meant to be explored with an AI coding assistant. [`AGENTS.md`](AGENTS.md) holds the project rules and architecture notes, and guided onboarding skills will be added as the project becomes runnable. Everything is plain Markdown, so you can read it without any assistant.
+This repository is meant to be explored with an AI coding assistant. [`AGENTS.md`](AGENTS.md) holds the project rules and architecture notes, and guided onboarding skills will be added as the project becomes runnable. Everything is plain Markdown, so you can read it without any assistant. Assistants working on this project must never commit or push without showing you the changes and getting your explicit "yes".
 
 ## Research and funding
 

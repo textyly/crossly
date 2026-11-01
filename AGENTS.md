@@ -10,10 +10,14 @@ Nothing runs end to end yet. The editor and three backend services run from sour
 
 `repos.json` lists every repository, its role and its status. `node scripts/bootstrap.mjs --dry-run` previews cloning them next to this file; cloned folders are git-ignored here. Each one is its own git repository.
 
+## Delivery work
+
+For CI, Dockerfiles, deployment or the test instance, follow `.claude/skills/crossly-delivery/SKILL.md`. It is plain Markdown, so any assistant can read it, not only Claude. The plan is delivered in vertical slices (see `docs/decisions/0005-deliver-in-vertical-slices.md`); the current slice is in `PLAN.md`.
+
 ## Rules
 
 - Never commit secrets: keys, tokens, `.env` files, OAuth client secrets. Describe how to supply them instead.
-- Ask before committing or pushing.
+- **Never commit or push on your own.** Show the changes for review first (a diff or a clear summary), and commit or push only after the maintainer gives an explicit "yes" for that specific commit or push. Approval for one commit or push does not carry over to the next. Leave changes uncommitted until then.
 - Ask before applying database migrations, or running anything against a developer's database. The authentication service migrates on startup.
 - Read a file before deleting or replacing it. Treat utilities that look unused as intentional until proven otherwise.
 - Contract packages (`@textyly/...-contracts`) are published from each service's `contracts/` folder, never from the service root. Service roots are marked `"private": true` to prevent this mistake.

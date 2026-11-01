@@ -1,0 +1,77 @@
+# Slices, tickets and facts
+
+Ticket ids are for reference; the GitHub issues are the live tracker. "Cluster repo" means the operator's repository that holds the cluster wiring (for the maintainer, `bozov-lab`). The planned public hostname of the maintainer's test instance is `crossly.bozov-lab.com`, but nothing in this repository may depend on it.
+
+## S0: Editor image to a public URL
+
+Proves the whole pipeline with the smallest thing.
+
+| Id | Repo | Ticket | Done when |
+|---|---|---|---|
+| S0-1 | crossly | Create the milestones S0 to S4 and the labels, file these tickets as issues, link the milestones from `PLAN.md` | Issues exist and `PLAN.md` links them |
+| S0-2 | crossly.ui | Dockerfile: build the editor, serve `dist/` with nginx as non-root; leave `debug/live-reload.js` out of the image | `docker run` serves `index.html` and makes no live-reload request |
+| S0-3 | crossly.ui | Workflow: pull requests run tests; a merge to `main` runs tests, then builds and pushes the multi-arch image `main-<short-sha>-<unix-timestamp>` | Both architectures appear in GHCR and the package is public |
+| S0-4 | crossly | `deploy/k8s` base for the editor: Deployment with requests, limits and probes; Service; Ingress whose host is a substitution variable | `kubectl kustomize deploy/k8s` renders, and a server-side dry run passes |
+| S0-5 | cluster repo | Namespace `crossly` with a ResourceQuota, a LimitRange and a default-deny NetworkPolicy that admits the ingress controller | Namespace exists and a test pod is reachable through the ingress controller |
+| S0-6 | cluster repo | Stage 1: apply the manifests by hand. Stage 2: install Flux, point a GitRepository at this repository and a Kustomization at `deploy/k8s`, with the host substituted | A manifest change merged to `main` reaches the cluster without a manual apply |
+| S0-7 | cluster repo | Stage 3: Flux image automation (ImageRepository, ImagePolicy over the sortable tag, ImageUpdateAutomation). Use a write-scoped deploy key for the cluster repo only | Pushing a new image changes the running pod with no manual step |
+| S0-8 | Cloudflare | Route the public host to the ingress controller service | `curl -I https://<host>/` returns 200 |
+| S0-9 | crossly, cluster repo | Update documentation and tick `PLAN.md` (show cluster-repo documentation changes before pushing, per its rules) | Docs match reality |
+
+## S1: Authentication, Postgres, routing
+
+| Id | Repo | Ticket | Done when |
+|---|---|---|---|
+| S1-1 | crossly.ui | Make backend URLs relative: `src/code/backend/config.ts`, and the hardcoded address in `src/code/repository/persistence.ts` (confirm whether that code is used) | No `localhost` in the built output; requests go to the same origin |
+| S1-2 | crossly.client.auth.service | Dockerfile and workflow, as S0-2 and S0-3 | Image in GHCR |
+| S1-3 | crossly | Postgres StatefulSet using the cluster's default storage class (never name one), headless Service, credentials from a Secret | Pod Ready, and data survives a pod restart |
+| S1-4 | crossly | Auth Deployment, Service and Ingress path `/api/v1/auth`. Configure the public UI address, secure cookies, cookie and JWT secrets, and the database URL (confirm the variable names in the service's config), with probes on `/health` | `POST /api/v1/auth/guest` returns a session, and migrations ran on first start |
+| S1-5 | crossly | A helper that generates the required secrets and applies them with `kubectl` without printing the values | Secrets exist and no value appears in logs or git |
+| S1-6 | crossly | Path routing: `/` to the editor, `/api/v1/auth` to the service | Session cookie is set for the public host with `Secure` |
+| S1-7 | auth service | Trust the proxy in front (TLS terminates outside) and confirm no URL is derived from the request host or protocol | Callback and redirects use the configured public URL |
+| S1-8 | crossly | NetworkPolicies for the real flows only: ingress controller to services, auth to Postgres | Everything else is denied |
+
+## S2: Preferences, patterns, Mongo
+
+| Id | Repo | Ticket | Done when |
+|---|---|---|---|
+| S2-1 | preferences and private.persistence services | Dockerfile and workflow each | Images in GHCR |
+| S2-2 | crossly | Mongo StatefulSet on the default storage class. First check that the official image runs on the Pi 5 (arm64) | Pod Ready, data survives a restart |
+| S2-3 | crossly | Deployments, Services and Ingress paths `/api/v1/preferences` and `/api/v1/patterns`; share the JWT secret and set the Mongo URI | Both `/health` endpoints answer through their paths |
+| S2-4 | patterns service | Confirm the request body size limit allows large patterns | A 1000 by 1000 pattern can be saved |
+| S2-5 | crossly | End-to-end check by hand: guest session, save, reload the page, load | Same pattern comes back for the same client |
+| S2-6 | crossly.ui | Optional: create the editor canvas without waiting for the backend, so it works offline | Editor renders with the backend down |
+
+## S3: Google sign-in
+
+| Id | Repo | Ticket | Done when |
+|---|---|---|---|
+| S3-1 | crossly | Create OAuth credentials with redirect URI `https://<host>/api/v1/auth/callback`; supply the client id and secret as cluster Secrets | Login page opens |
+| S3-2 | crossly | Leave the consent screen in Testing and list test users | A listed user signs in and keeps their client identifier |
+
+## S4: Packaging for others
+
+Single `CROSSLY_PUBLIC_URL` setting (replaces the UI, CORS and callback URLs); Docker Compose stack with a gateway container; an end-to-end smoke test in CI; a Helm chart published as an OCI artifact with a `kind` test in CI; `edge` and `stable` channels; skills for running, testing, developing and deploying (written against scripts that CI runs); rate limiting and cleanup of stale guest data; backups of stored patterns.
+
+## Backlog (unscheduled)
+
+- Loading a very large pattern hangs because `loadPattern` reads the thread's `indexesX` and `indexesY` getters, each of which copies the whole array, inside a per-dot loop. Read them once before the loop. Related costs: an object allocated per iteration, and visibility flags held in a plain array.
+- Presize the thread arrays instead of growing them by four times each time, which over-allocates.
+- Licences for the repositories that have none; real descriptions for scaffold repositories.
+
+## Facts to verify before relying on them (true on 2026-11-01)
+
+- All three services start with `node dist/app.js`, expose `GET /health`, and their `build` script builds contracts before compiling.
+- Service tests need no live database.
+- The editor's `npm run build` produces a self-contained `dist/` (`index.html`, `code`, `assets`, `icons`, `styles`, `debug`). `index.html` loads `./debug/live-reload.js`.
+- The editor creates its canvas only after the backend session resolves, so with no backend it shows toolbars and nothing else.
+- The authentication service migrates on startup under an advisory lock, so several replicas are safe.
+- The three services share one HS256 secret to verify the session cookie.
+
+## Early spikes
+
+- Does the official MongoDB image run on the Pi 5?
+- How long does an emulated amd64 build take? If too long, use native runners.
+- Do GHCR packages need a one-time "make public" step each?
+- Exact Flux image-automation setup for tags held in a Flux Kustomization.
+- How each service reads its port, and the default ports (5001, 5002, 5003).
