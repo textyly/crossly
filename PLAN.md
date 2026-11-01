@@ -2,7 +2,7 @@
 
 How Crossly goes from "runs from source on a developer machine" to "anyone can run it, and a public test instance is online". Progress is tracked by ticking boxes in this file; history lives in `git log`. Work is organised in vertical slices ([decision 0005](docs/decisions/0005-deliver-in-vertical-slices.md)); detailed tickets, acceptance checks and facts are in the [`crossly-delivery` skill](.claude/skills/crossly-delivery/SKILL.md), and tickets are GitHub issues on the project board, created when work on them starts.
 
-**Current focus: slice S0 (editor image to a public URL), plus the citable DOI left from Phase 1.**
+**Current focus: slice S0 (editor image to a public URL).**
 
 ## Where things stand
 
@@ -21,7 +21,6 @@ Not done: only the editor is containerised (its image is published on every merg
 - [x] This repository published, with a README that states the real status
 - [x] Organisation profile page published
 - [x] This repository pinned on the organisation page
-- [ ] Releases archived with a citable DOI
 
 ## Delivery slices
 
@@ -68,7 +67,7 @@ The last three items are carried out by whoever operates an instance. Their stat
 
 ## Public release
 
-- [ ] First stable release with citation details and a DOI
+- [ ] First stable release
 - [ ] Rate limiting and cleanup of stale guest data
 - [ ] Backups for stored patterns
 - [ ] Loading very large patterns (for example 1000 by 1000) no longer hangs
