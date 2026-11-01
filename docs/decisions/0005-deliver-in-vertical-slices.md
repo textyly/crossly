@@ -21,9 +21,9 @@ Build the thinnest possible slice through every layer first (commit, tests, imag
 Choices that follow from this:
 
 - **Images** are built for amd64 and arm64 on every merge to `main` and pushed to the GitHub Container Registry as `ghcr.io/textyly/crossly-<service>:main-<short-sha>-<unix-timestamp>`. The timestamp makes tags sortable.
-- **Manifests** live in this repository under `deploy/k8s`, so the product carries no knowledge of any particular cluster. A cluster operator keeps only the wiring that points at them.
-- **Deployment is pull-based** (see [0003](0003-pull-based-deployment.md)). The cluster runs Flux with image automation, so the only thing that can change a deployment from the CI side is the publication of a new image tag. No cluster-affecting credential is stored in GitHub.
-- **Flux is introduced in three stages:** apply the manifests by hand, then let Flux apply them, then add image automation.
+- **Manifests** live next to the code they deploy, in each repository's `deploy/k8s`, so the product carries no knowledge of any particular cluster. A cluster operator keeps only the wiring that points at them.
+- **Deployment is pull-based** (see [0003](0003-pull-based-deployment.md)). The cluster runs Flux, which follows the manifest artifact that CI publishes with each image ([0006](0006-publish-manifests-as-oci-artifact.md)), so the only thing that can change a deployment from the CI side is the publication of a new version. No cluster-affecting credential is stored in GitHub.
+- **Flux is introduced in two stages:** apply the manifests by hand, then let Flux apply them from the published artifact.
 - **Tickets** are GitHub issues on the project board, created when work on them starts and not all up front. `PLAN.md` tracks progress by slice.
 
 ## Consequences
