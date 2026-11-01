@@ -1,6 +1,6 @@
 # Slices, tickets and facts
 
-Ticket ids are for reference; the GitHub issues are the live tracker. "Cluster repo" means the operator's repository that holds the cluster wiring (for the maintainer, `bozov-lab`). The planned public hostname of the maintainer's test instance is `crossly.bozov-lab.com`, but nothing in this repository may depend on it.
+Ticket ids are for reference; the GitHub issues are the live tracker. "Cluster repo" means the operator's repository that holds the cluster wiring (for the maintainer, `bozov-lab`). The maintainer's test instance is served at `crossly.bozov-lab.com`. There is no mailbox on that domain, so anything that needs a contact address (for example the OAuth consent screen) must use an existing address. Nothing in this repository may depend on the hostname.
 
 ## S0: Editor image to a public URL
 
@@ -46,7 +46,7 @@ Proves the whole pipeline with the smallest thing.
 
 | Id | Repo | Ticket | Done when |
 |---|---|---|---|
-| S3-1 | crossly | Create OAuth credentials with redirect URI `https://<host>/api/v1/auth/callback`; supply the client id and secret as cluster Secrets | Login page opens |
+| S3-1 | crossly | Create OAuth credentials with redirect URI `https://<host>/api/v1/auth/callback`; supply the client id and secret as cluster Secrets. The consent screen's support and developer contact addresses must be existing mailboxes, since the test domain has none | Login page opens |
 | S3-2 | crossly | Leave the consent screen in Testing and list test users | A listed user signs in and keeps their client identifier |
 
 ## S4: Packaging for others
@@ -57,7 +57,9 @@ Single `CROSSLY_PUBLIC_URL` setting (replaces the UI, CORS and callback URLs); D
 
 - Loading a very large pattern hangs because `loadPattern` reads the thread's `indexesX` and `indexesY` getters, each of which copies the whole array, inside a per-dot loop. Read them once before the loop. Related costs: an object allocated per iteration, and visibility flags held in a plain array.
 - Presize the thread arrays instead of growing them by four times each time, which over-allocates.
-- Licences for the repositories that have none; real descriptions for scaffold repositories.
+- Once S0 is working, merge `main` into the stale `develop` branch of `crossly.ui`.
+- Licences and real descriptions for the three scaffold repositories, which are empty on GitHub.
+- Funding project number in `CITATION.cff`.
 
 ## Facts to verify before relying on them (true on 2026-11-01)
 
