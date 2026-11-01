@@ -25,7 +25,7 @@ Not done: nothing is containerised, packaged, deployed or released yet.
 
 ## Delivery slices
 
-Each slice is deployable and proves one more link of the chain. A test instance runs on the maintainer's home Kubernetes cluster, so it is online only while that cluster is powered on. It is for testing, not production.
+Each slice is deployable and proves one more link of the chain. The public test instance is for testing, not production.
 
 ### S0: Editor image to a public URL
 

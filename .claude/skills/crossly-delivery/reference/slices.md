@@ -1,6 +1,6 @@
 # Slices, tickets and facts
 
-Ticket ids are for reference; the GitHub issues are the live tracker. "Cluster repo" means the operator's repository that holds the cluster wiring (for the maintainer, `bozov-lab`). The maintainer's test instance is served at `crossly.bozov-lab.com`. There is no mailbox on that domain, so anything that needs a contact address (for example the OAuth consent screen) must use an existing address. Nothing in this repository may depend on the hostname.
+Ticket ids are for reference; the GitHub issues are the live tracker. "Cluster repo" means the operator's own repository that holds the cluster wiring. It is outside this project, and nothing in this repository may depend on a particular cluster, domain or piece of hardware. Anything that needs a contact address (for example the OAuth consent screen) must use an existing mailbox.
 
 ## S0: Editor image to a public URL
 
@@ -15,7 +15,7 @@ Proves the whole pipeline with the smallest thing.
 | S0-5 | cluster repo | Namespace `crossly` with a ResourceQuota, a LimitRange and a default-deny NetworkPolicy that admits the ingress controller | Namespace exists and a test pod is reachable through the ingress controller |
 | S0-6 | cluster repo | Stage 1: apply the manifests by hand. Stage 2: install Flux, point a GitRepository at this repository and a Kustomization at `deploy/k8s`, with the host substituted | A manifest change merged to `main` reaches the cluster without a manual apply |
 | S0-7 | cluster repo | Stage 3: Flux image automation (ImageRepository, ImagePolicy over the sortable tag, ImageUpdateAutomation). Use a write-scoped deploy key for the cluster repo only | Pushing a new image changes the running pod with no manual step |
-| S0-8 | Cloudflare | Route the public host to the ingress controller service | `curl -I https://<host>/` returns 200 |
+| S0-8 | operator | Route a public hostname to the ingress controller (a tunnel, a load balancer or DNS, whichever the operator uses) | `curl -I https://<host>/` returns 200 |
 | S0-9 | crossly, cluster repo | Update documentation and tick `PLAN.md` (show cluster-repo documentation changes before pushing, per its rules) | Docs match reality |
 
 ## S1: Authentication, Postgres, routing
@@ -36,7 +36,7 @@ Proves the whole pipeline with the smallest thing.
 | Id | Repo | Ticket | Done when |
 |---|---|---|---|
 | S2-1 | preferences and private.persistence services | Dockerfile and workflow each | Images in GHCR |
-| S2-2 | crossly | Mongo StatefulSet on the default storage class. First check that the official image runs on the Pi 5 (arm64) | Pod Ready, data survives a restart |
+| S2-2 | crossly | Mongo StatefulSet on the default storage class. First check that the official image runs on arm64 | Pod Ready, data survives a restart |
 | S2-3 | crossly | Deployments, Services and Ingress paths `/api/v1/preferences` and `/api/v1/patterns`; share the JWT secret and set the Mongo URI | Both `/health` endpoints answer through their paths |
 | S2-4 | patterns service | Confirm the request body size limit allows large patterns | A 1000 by 1000 pattern can be saved |
 | S2-5 | crossly | End-to-end check by hand: guest session, save, reload the page, load | Same pattern comes back for the same client |
@@ -46,7 +46,7 @@ Proves the whole pipeline with the smallest thing.
 
 | Id | Repo | Ticket | Done when |
 |---|---|---|---|
-| S3-1 | crossly | Create OAuth credentials with redirect URI `https://<host>/api/v1/auth/callback`; supply the client id and secret as cluster Secrets. The consent screen's support and developer contact addresses must be existing mailboxes, since the test domain has none | Login page opens |
+| S3-1 | crossly | Create OAuth credentials with redirect URI `https://<host>/api/v1/auth/callback`; supply the client id and secret as cluster Secrets. The consent screen's support and developer contact addresses must be existing mailboxes | Login page opens |
 | S3-2 | crossly | Leave the consent screen in Testing and list test users | A listed user signs in and keeps their client identifier |
 
 ## S4: Packaging for others
@@ -72,7 +72,7 @@ Single `CROSSLY_PUBLIC_URL` setting (replaces the UI, CORS and callback URLs); D
 
 ## Early spikes
 
-- Does the official MongoDB image run on the Pi 5?
+- Does the official MongoDB image run on arm64, and what minimum CPU does it need?
 - How long does an emulated amd64 build take? If too long, use native runners.
 - Answered in S0-3: yes. The organisation must first allow public packages (organisation settings, Packages, Package creation, tick Public). Then each new package starts private and is made public once, in its own package settings (Danger Zone, Change visibility). Afterwards an anonymous pull works; check it with an empty Docker config.
 - Exact Flux image-automation setup for tags held in a Flux Kustomization.
