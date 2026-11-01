@@ -19,6 +19,7 @@ For CI, Dockerfiles, deployment or the test instance, follow `.claude/skills/cro
 - Never commit secrets: keys, tokens, `.env` files, OAuth client secrets. Describe how to supply them instead.
 - **Never commit or push on your own.** Show the changes for review first (a diff or a clear summary), and commit or push only after the maintainer gives an explicit "yes" for that specific commit or push. Approval for one commit or push does not carry over to the next. Leave changes uncommitted until then.
 - Ask before applying database migrations, or running anything against a developer's database. The authentication service migrates on startup.
+- Avoid comments in code, manifests and scripts. Make files explain themselves with clear names and small steps. Add a comment only where the logic is genuinely hard to reason about (a non-obvious constraint, a workaround, a surprising reason), and say why, never what. Put the rationale for a decision in a decision record or a skill.
 - Read a file before deleting or replacing it. Treat utilities that look unused as intentional until proven otherwise.
 - Contract packages (`@textyly/...-contracts`) are published from each service's `contracts/` folder, never from the service root. Service roots are marked `"private": true` to prevent this mistake.
 - Changes to this file, to `CLAUDE.md` and to anything under `.claude/skills/` need human review like code, because they steer other people's assistants.
