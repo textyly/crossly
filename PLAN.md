@@ -2,7 +2,7 @@
 
 How Crossly goes from "runs from source on a developer machine" to "anyone can run it, and a public test instance is online". Progress is tracked by ticking boxes in this file; history lives in `git log`.
 
-**Current focus: Phase 1, the front door.**
+**Current focus: finishing Phase 1 (only the citable DOI is left), then Phase 2.**
 
 ## Where things stand
 
@@ -18,9 +18,9 @@ Not done: nothing is containerised, packaged, deployed or released yet.
 
 ## Phase 1: Front door
 
-- [ ] This repository published, with a README that states the real status
-- [ ] Organisation profile page published
-- [ ] This repository pinned on the organisation page
+- [x] This repository published, with a README that states the real status
+- [x] Organisation profile page published
+- [x] This repository pinned on the organisation page
 - [ ] Releases archived with a citable DOI
 
 ## Phase 2: Make Crossly portable
