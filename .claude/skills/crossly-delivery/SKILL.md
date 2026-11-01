@@ -30,8 +30,8 @@ Exact tickets, acceptance checks and the facts they rely on are in [reference/sl
 
 - **Trigger:** pull requests run tests only. A merge to `main` runs tests, then builds and pushes images.
 - **Images:** amd64 and arm64, pushed to `ghcr.io/textyly/crossly-<service>` with the tag `main-<short-sha>-<unix-timestamp>`. Packages must be public so a cluster pulls them without credentials.
-- **Manifests:** in this repository under `deploy/k8s`. Nothing in them may name a particular cluster, domain or secret value.
-- **Deploying:** the cluster pulls. Introduce Flux in stages (manual apply, then Flux, then image automation) and confirm each stage works before the next.
+- **Manifests:** each repository keeps its own under `deploy/k8s`, and CI publishes them with the images as an OCI artifact ([decision 0006](../../../docs/decisions/0006-publish-manifests-as-oci-artifact.md)). Nothing in them may name a particular cluster, domain or secret value.
+- **Deploying:** the cluster pulls. Introduce Flux in stages (manual apply, then Flux following the published manifest artifact) and confirm each stage works before the next.
 - **Secrets:** never in git, images or workflow files. They are created in the cluster by the operator. Document the names and keys a deployment needs, never the values.
 - **Dockerfiles:** multi-stage, run as a non-root user, install with `npm ci`, and add a `.dockerignore`. Services build their contracts before compiling and start with `node dist/app.js`. The editor is built with its existing scripts and served as static files from `dist/`.
 

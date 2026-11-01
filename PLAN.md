@@ -34,7 +34,7 @@ Proves the whole pipeline: merge, test, image, registry, cluster, public URL. Th
 - [x] Editor container image and CI (tests on pull requests; multi-architecture image published on every merge to `main`)
 - [x] Kubernetes manifests for the editor, kept in the editor repository (`deploy/k8s`) and published with each image as an OCI artifact
 - [ ] Cluster namespace with quotas and a default-deny network policy
-- [ ] Cluster pulls and applies the manifests (Flux), then picks up new images automatically (see [decision 0003](docs/decisions/0003-pull-based-deployment.md))
+- [ ] Cluster pulls and applies the manifests (Flux), and picks up each new published version automatically (see [decision 0003](docs/decisions/0003-pull-based-deployment.md))
 - [ ] Public URL routed to the cluster; a merge to `main` reaches it with no manual step
 
 The last three items are carried out by whoever operates an instance. Their state is recorded by that operator and cannot be derived from this repository, so they stay unchecked here.
